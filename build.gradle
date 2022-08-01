@@ -4,7 +4,7 @@ plugins {
 	id 'java'
 }
 
-group = 'git.swapnlk'
+group = 'git.swapnlk.io'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
@@ -19,14 +19,27 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+
+	testLogging {
+		events "PASSED", "SKIPPED", "FAILED"
+	}
+}
+
+jar {
+	duplicatesStrategy "exclude"
+	enabled=false
+
+	from{
+		configurations.runtimeClasspath.collect {it.isDirectory() ? it : zipTree(it) }
+	}
+
+
 }
